@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "Simple-ADOT-Helm-Chart.name" -}}
+{{- define "adot-helm-eks-ec2.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "Simple-ADOT-Helm-Chart.fullname" -}}
+{{- define "adot-helm-eks-ec2.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "Simple-ADOT-Helm-Chart.chart" -}}
+{{- define "adot-helm-eks-ec2.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "Simple-ADOT-Helm-Chart.labels" -}}
-helm.sh/chart: {{ include "Simple-ADOT-Helm-Chart.chart" . }}
-{{ include "Simple-ADOT-Helm-Chart.selectorLabels" . }}
+{{- define "adot-helm-eks-ec2.labels" -}}
+helm.sh/chart: {{ include "adot-helm-eks-ec2.chart" . }}
+{{ include "adot-helm-eks-ec2.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "Simple-ADOT-Helm-Chart.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "Simple-ADOT-Helm-Chart.name" . }}
+{{- define "adot-helm-eks-ec2.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "adot-helm-eks-ec2.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "Simple-ADOT-Helm-Chart.serviceAccountName" -}}
+{{- define "adot-helm-eks-ec2.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "Simple-ADOT-Helm-Chart.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "adot-helm-eks-ec2.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

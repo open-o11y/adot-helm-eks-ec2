@@ -1,6 +1,6 @@
 apiVersion: v2
-name: Simple-ADOT-Helm-Chart
-description: A Helm chart for Kubernetes
+name: adot-helm-eks-ec2
+description: A Helm chart for Fluent Bit and AWS Distro for OpenTelemetry Collector for metrics
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -22,3 +22,8 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
+
+dependencies:
+  - name: aws-cloudwatch-metrics
+    repository: "https://aws.github.io/eks-charts"
+    version: 0.0.5
