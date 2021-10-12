@@ -1,0 +1,50 @@
+nameOverride: ""
+fullnameOverride: ""
+awsRegion: ""
+clusterName: ""
+awsForFluentBit:
+  enabled: true
+  namespaceOverride: ""
+  name: aws-for-fluent-bit
+  clusterroleName: aws-for-fluent-bit-role
+  configName: aws-for-fluent-bit-config
+  clusterrolebindingName: aws-for-fluent-bit-role-binding
+  namespace: amazon-cloudwatch
+  image:
+    repository: amazon/aws-for-fluent-bit
+    tag: v2.20.0
+    pullPolicy: IfNotPresent
+  input:
+    tag: "application.*"
+    logPath: "/var/log/containers/*.log"
+    fluentBitPath: "/var/log/containers/fluent-bit*"
+    cloudwatchAgentPath: "/var/log/containers/cloudwatch-agent*"
+    excludePath: "/var/log/containers/cloudwatch-agent*, /var/log/containers/fluent-bit*, /var/log/containers/aws-node*, /var/log/containers/kube-proxy*"
+    dockerMode: "On"
+    dockerModeFlush: 5
+    docerModeParser: "container_firstline"
+    parser: "docker"
+    db: "/var/fluent-bit/state/flb_container.db"
+    memBufLimit: "50MB"
+    fluentBitMemBufLimit: "5MB"
+    skipLongLines: "On"
+    refreshInterval: 10
+    rotateWait: 30
+    storageType: "filesystem"
+    readFromHead: "On"
+    readFromTail: "Off"
+  env:
+    httpServer: On
+    httpPort: "2020"
+    readFromHead: "Off"
+    readFromTail: "On"
+
+awsOtelCollector:
+  enabled: true
+  namespaceOverride: ""
+  name: aws-otel-collector
+  image:
+    repository: amazon/aws-otel-collector
+    tag: v0.13.0
+    pullPolicy: IfNotPresent
+  namespace: aws-otel-eks
