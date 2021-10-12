@@ -1,0 +1,207 @@
+# Default values for adot-helm-eks-ec2.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+
+adotMetrics:
+  enabled: true
+
+  serviceAccount:
+    create: true
+    name: aws-otel-sa
+
+  configMap:
+    name: otel-agent-conf
+    lables:
+    app: opentelemetry
+    component: otel-agent-conf
+
+  clusterRole:
+    name: aws-otel-sa
+
+  clusterRoleBinding:
+    name: adot-metrics-role-binding
+
+  daemonSet:
+    name: aws-otel-eks-ci
+    containers:
+      name: aws-otel-collector
+    image:
+      repository: amazon/aws-otel-collector
+      tag: v0.13.0
+      pullPolicy: IfNotPresent
+    command:
+      - "/awscollector"
+      - "--config=/conf/adot-config.yaml"
+    resources:
+      limits:
+        cpu: 200m
+        memory: 200Mi
+      requests:
+        cpu: 200m
+        memory: 200Mi
+    volumes:
+      name: otel-agent-config-vol
+      key: otel-agent-config
+      path: otel-agent-config.yaml
+
+  config: |
+    extensions:
+      health_check:
+
+    receivers:
+      awscontainerinsightreceiver:
+        # all parameters are optional
+        collection_interval:
+        container_orchestrator:
+        add_service_as_attribute:
+        prefer_full_pod_name:
+
+    processors:
+      batch/metrics:
+        timeout: 60s
+
+    exporters:
+      awsemf:
+        namespace: ContainerInsights
+        log_group_name: '/aws/containerinsights/{ClusterName}/performance'
+        log_stream_name: '{NodeName}'
+        resource_to_telemetry_conversion:
+          enabled: true
+        dimension_rollup_option: NoDimensionRollup
+        parse_json_encoded_attr_values: [Sources, kubernetes]
+        metric_declarations:
+          # node metrics
+          - dimensions: [[NodeName, InstanceId, ClusterName]]
+            metric_name_selectors:
+              - node_cpu_utilization
+              - node_memory_utilization
+              - node_network_total_bytes
+              - node_cpu_reserved_capacity
+              - node_memory_reserved_capacity
+              - node_number_of_running_pods
+              - node_number_of_running_containers
+          - dimensions: [[ClusterName]]
+            metric_name_selectors:
+              - node_cpu_utilization
+              - node_memory_utilization
+              - node_network_total_bytes
+              - node_cpu_reserved_capacity
+              - node_memory_reserved_capacity
+              - node_number_of_running_pods
+              - node_number_of_running_containers
+              - node_cpu_usage_total
+              - node_cpu_limit
+              - node_memory_working_set
+              - node_memory_limit
+
+          # pod metrics
+          - dimensions: [[PodName, Namespace, ClusterName], [Service, Namespace, ClusterName], [Namespace, ClusterName], [ClusterName]]
+            metric_name_selectors:
+              - pod_cpu_utilization
+              - pod_memory_utilization
+              - pod_network_rx_bytes
+              - pod_network_tx_bytes
+              - pod_cpu_utilization_over_pod_limit
+              - pod_memory_utilization_over_pod_limit
+          - dimensions: [[PodName, Namespace, ClusterName], [ClusterName]]
+            metric_name_selectors:
+              - pod_cpu_reserved_capacity
+              - pod_memory_reserved_capacity
+          - dimensions: [[PodName, Namespace, ClusterName]]
+            metric_name_selectors:
+              - pod_number_of_container_restarts
+
+          # cluster metrics
+          - dimensions: [[ClusterName]]
+            metric_name_selectors:
+              - cluster_node_count
+              - cluster_failed_node_count
+
+          # service metrics
+          - dimensions: [[Service, Namespace, ClusterName], [ClusterName]]
+            metric_name_selectors:
+              - service_number_of_running_pods
+
+          # node fs metrics
+          - dimensions: [[NodeName, InstanceId, ClusterName], [ClusterName]]
+            metric_name_selectors:
+              - node_filesystem_utilization
+
+          # namespace metrics
+          - dimensions: [[Namespace, ClusterName], [ClusterName]]
+            metric_name_selectors:
+              - namespace_number_of_running_pods
+
+    service:
+      pipelines:
+        metrics:
+          receivers: [awscontainerinsightreceiver]
+          processors: [batch/metrics]
+          exporters: [awsemf]
+
+      extensions: [health_check]

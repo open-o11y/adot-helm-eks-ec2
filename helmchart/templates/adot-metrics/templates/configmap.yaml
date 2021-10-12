@@ -1,0 +1,13 @@
+{{- if .Values.adotMetrics.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.adotMetrics.configMap.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.adotMetrics.configMap.app }}
+    component: {{ .Values.adotMetrics.configMap.component }}
+data:
+  otel-agent-config: |
+    {{ .Values.adotMetrics.config | nindent 4 }}
+{{- end -}}
