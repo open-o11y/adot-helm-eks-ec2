@@ -10,5 +10,5 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ .Values.fluentbit.name }}
-    namespace: amazon-cloudwatch
+    namespace: {{ include "aws-for-fluent-bit.namespace" . }}
 {{- end }}

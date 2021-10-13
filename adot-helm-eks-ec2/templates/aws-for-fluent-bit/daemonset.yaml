@@ -2,8 +2,8 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: fluent-bit
-  namespace: amazon-cloudwatch
+  name: {{ .Values.fluentbit.name }}
+  namespace: {{ include "aws-for-fluent-bit.namespace" . }}
   labels:
     k8s-app: {{ .Values.fluentbit.name }}
     version: v1
