@@ -66,10 +66,10 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
     {{- if .Values.global.namespaceOverride -}}
       {{- .Values.global.namespaceOverride -}}
     {{- else -}}
-      {{- .Release.Namespace -}}
+      {{- .Values.fluentbit.namespace -}}
     {{- end -}}
   {{- else -}}
-    {{- .Release.Namespace -}}
+    {{- .Values.fluentbit.namespace -}}
   {{- end -}}
 {{- end -}}
 

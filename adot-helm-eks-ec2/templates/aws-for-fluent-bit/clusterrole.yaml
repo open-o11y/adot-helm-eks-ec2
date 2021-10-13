@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "aws-for-fluent-bit.fullname" . }}
+  name: fluent-bit
 rules:
   - nonResourceURLs:
       - /metrics

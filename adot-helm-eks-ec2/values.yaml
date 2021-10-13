@@ -1,21 +1,23 @@
 nameOverride: ""
 fullnameOverride: ""
+global:
+  namespaceOverride: ""
 awsRegion: ""
 clusterName: ""
 serviceAccount:
   create: true
   annotations: {}
-  name:
+  name: ""
 fluentbit:
   enabled: true
   namespaceOverride: ""
-  name: aws-for-fluent-bit
-  configName: aws-for-fluent-bit-config
+  name: fluent-bit
+  configName: fluent-bit-config
   namespace: amazon-cloudwatch
   image:
     repository: amazon/aws-for-fluent-bit
-    tag: v2.20.0
-    pullPolicy: IfNotPresent
+    tag: 2.20.0
+    pullPolicy: Always
   input:
     tag: "application.*"
     logPath: "/var/log/containers/*.log"
