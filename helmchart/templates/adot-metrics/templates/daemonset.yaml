@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ .Values.adotMetrics.daemonSet.name }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.adotMetrics.namespace }}
 spec:
   selector:
     matchLabels:
@@ -36,7 +36,7 @@ spec:
                   fieldPath: metadata.namespace
           command:
             - "/awscollector"
-            - "--config=/conf/otel-agent-config.yaml"
+            - "--config=/conf/adot-config.yaml"
           volumeMounts:
             - name: rootfs
               mountPath: /rootfs
@@ -53,7 +53,7 @@ spec:
             - name: devdisk
               mountPath: /dev/disk
               readOnly: true
-            - name: otel-agent-config-vol
+            - name: adot-config-vol
               mountPath: /conf
           resources:
             {{- toYaml .Values.adotMetrics.daemonSet.resources | nindent 12 }}
