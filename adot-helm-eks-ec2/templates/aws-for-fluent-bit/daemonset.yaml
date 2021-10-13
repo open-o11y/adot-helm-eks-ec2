@@ -1,4 +1,4 @@
-{{- if .Values.awsForFluentBit.enabled }}
+{{- if .Values.fluentbit.enabled }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:

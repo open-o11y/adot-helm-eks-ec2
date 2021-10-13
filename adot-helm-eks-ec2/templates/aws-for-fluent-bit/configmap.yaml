@@ -1,11 +1,11 @@
-{{- if .Values.awsForFluentBit.enabled }}
+{{- if .Values.fluentbit.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.awsForFluentBit.configName }}
-  namespace: {{ .Values.awsForFluentBit.namespace }}
+  name: {{ .Values.fluentbit.configName }}
+  namespace: {{ .Values.fluentbit.namespace }}
   labels:
-    k8s-app: {{ .Values.awsForFluentBit.name }}
+    k8s-app: {{ .Values.fluentbit.name }}
 data:
   fluent-bit.conf: |
     [SERVICE]
@@ -13,9 +13,9 @@ data:
         Log_Level                 info
         Daemon                    off
         Parsers_File              parsers.conf
-        HTTP_Server               {{ .Values.awsForFluentBit.env.httpServer }}
+        HTTP_Server               {{ .Values.fluentbit.env.httpServer }}
         HTTP_Listen               0.0.0.0
-        HTTP_Port                 {{ .Values.awsForFluentBit.env.httpPort }}
+        HTTP_Port                 {{ .Values.fluentbit.env.httpPort }}
         storage.path              /var/fluent-bit/state/flb-storage/
         storage.sync              normal
         storage.checksum          off
@@ -28,45 +28,45 @@ data:
   application-log.conf: |
     [INPUT]
         Name                tail
-        Tag                 {{ .Values.awsForFluentBit.input.tag }}
-        Exclude_Path        {{ .Values.awsForFluentBit.input.excludePath }}
-        Path                {{ .Values.awsForFluentBit.input.logPath }}
-        Docker_Mode         {{ .Values.awsForFluentBit.input.dockerMode }}
-        Docker_Mode_Flush   {{ .Values.awsForFluentBit.input.dockerModeFlush }}
-        Docker_Mode_Parser  {{ .Values.awsForFluentBit.input.docerModeParser }}
-        Parser              {{ .Values.awsForFluentBit.input.parser }}
-        DB                  {{ .Values.awsForFluentBit.input.db }}
-        Mem_Buf_Limit       {{ .Values.awsForFluentBit.input.memBufLimit }}
-        Skip_Long_Lines     {{ .Values.awsForFluentBit.input.skipLongLines }}
-        Refresh_Interval    {{ .Values.awsForFluentBit.input.refreshInterval }}
-        Rotate_Wait         {{ .Values.awsForFluentBit.input.rotateWait }}
-        storage.type        {{ .Values.awsForFluentBit.input.storageType }}
-        Read_from_Head      {{ .Values.awsForFluentBit.env.readFromHead }}
+        Tag                 {{ .Values.fluentbit.input.tag }}
+        Exclude_Path        {{ .Values.fluentbit.input.excludePath }}
+        Path                {{ .Values.fluentbit.input.logPath }}
+        Docker_Mode         {{ .Values.fluentbit.input.dockerMode }}
+        Docker_Mode_Flush   {{ .Values.fluentbit.input.dockerModeFlush }}
+        Docker_Mode_Parser  {{ .Values.fluentbit.input.docerModeParser }}
+        Parser              {{ .Values.fluentbit.input.parser }}
+        DB                  {{ .Values.fluentbit.input.db }}
+        Mem_Buf_Limit       {{ .Values.fluentbit.input.memBufLimit }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.refreshInterval }}
+        Rotate_Wait         {{ .Values.fluentbit.input.rotateWait }}
+        storage.type        {{ .Values.fluentbit.input.storageType }}
+        Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [INPUT]
         Name                tail
-        Tag                 {{ .Values.awsForFluentBit.input.tag }}
-        Path                {{ .Values.awsForFluentBit.input.fluentBitPath }}
-        Parser              {{ .Values.awsForFluentBit.input.parser }}
+        Tag                 {{ .Values.fluentbit.input.tag }}
+        Path                {{ .Values.fluentbit.input.fluentBitPath }}
+        Parser              {{ .Values.fluentbit.input.parser }}
         DB                  /var/fluent-bit/state/flb_log.db
         Mem_Buf_Limit       5MB
-        Skip_Long_Lines     {{ .Values.awsForFluentBit.input.skipLongLines }}
-        Refresh_Interval    {{ .Values.awsForFluentBit.input.refreshInterval }}
-        Read_from_Head      {{ .Values.awsForFluentBit.env.readFromHead }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.refreshInterval }}
+        Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [INPUT]
         Name                tail
         Tag                 application.*
-        Path                {{ .Values.awsForFluentBit.input.cloudwatchAgentPath }}
+        Path                {{ .Values.fluentbit.input.cloudwatchAgentPath }}
         Docker_Mode         On
         Docker_Mode_Flush   5
         Docker_Mode_Parser  cwagent_firstline
         Parser              docker
         DB                  /var/fluent-bit/state/flb_cwagent.db
         Mem_Buf_Limit       5MB
-        Skip_Long_Lines     {{ .Values.awsForFluentBit.input.skipLongLines }}
-        Refresh_Interval    {{ .Values.awsForFluentBit.input.refreshInterval }}
-        Read_from_Head      {{ .Values.awsForFluentBit.env.readFromHead }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.refreshInterval }}
+        Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [FILTER]
         Name                kubernetes
@@ -97,7 +97,7 @@ data:
         Systemd_Filter      _SYSTEMD_UNIT=kubelet.service
         DB                  /var/fluent-bit/state/systemd.db
         Path                /var/log/journal
-        Read_From_Tail      {{ .Values.awsForFluentBit.env.readFromTail }}
+        Read_From_Tail      {{ .Values.fluentbit.env.readFromTail }}
 
     [INPUT]
         Name                tail
@@ -113,7 +113,7 @@ data:
         Refresh_Interval    10
         Rotate_Wait         30
         storage.type        filesystem
-        Read_from_Head      {{ .Values.awsForFluentBit.env.readFromHead }}
+        Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [FILTER]
         Name                modify
@@ -147,7 +147,7 @@ data:
         Mem_Buf_Limit       5MB
         Skip_Long_Lines     On
         Refresh_Interval    10
-        Read_from_Head      {{ .Values.awsForFluentBit.env.readFromHead }}
+        Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [INPUT]
         Name                tail
@@ -158,7 +158,7 @@ data:
         Mem_Buf_Limit       5MB
         Skip_Long_Lines     On
         Refresh_Interval    10
-        Read_from_Head      {{ .Values.awsForFluentBit.env.readFromHead }}
+        Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [INPUT]
         Name                tail
@@ -169,7 +169,7 @@ data:
         Mem_Buf_Limit       5MB
         Skip_Long_Lines     On
         Refresh_Interval    10
-        Read_from_Head      {{ .Values.awsForFluentBit.env.readFromHead }}
+        Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [FILTER]
         Name                aws

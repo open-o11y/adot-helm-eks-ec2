@@ -2,13 +2,15 @@ nameOverride: ""
 fullnameOverride: ""
 awsRegion: ""
 clusterName: ""
-awsForFluentBit:
+serviceAccount:
+  create: true
+  annotations: {}
+  name:
+fluentbit:
   enabled: true
   namespaceOverride: ""
   name: aws-for-fluent-bit
-  clusterroleName: aws-for-fluent-bit-role
   configName: aws-for-fluent-bit-config
-  clusterrolebindingName: aws-for-fluent-bit-role-binding
   namespace: amazon-cloudwatch
   image:
     repository: amazon/aws-for-fluent-bit
@@ -39,7 +41,7 @@ awsForFluentBit:
     readFromHead: "Off"
     readFromTail: "On"
 
-awsOtelCollector:
+adot:
   enabled: true
   namespaceOverride: ""
   name: aws-otel-collector

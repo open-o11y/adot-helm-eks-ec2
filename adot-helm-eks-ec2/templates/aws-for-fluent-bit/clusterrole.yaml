@@ -1,7 +1,8 @@
+{{- if .Values.fluentbit.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Values.awsForFluentBit.clusterroleName }}
+  name: {{ include "aws-for-fluent-bit.fullname" . }}
 rules:
   - nonResourceURLs:
       - /metrics
@@ -13,3 +14,4 @@ rules:
       - pods
       - pods/logs
     verbs: ["get", "list", "watch"]
+{{- end }}

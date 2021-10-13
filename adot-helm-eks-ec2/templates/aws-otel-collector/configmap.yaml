@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: otel-agent-conf
-  namespace: {{ .Values.awsOtelCollector.namespace }}
+  namespace: {{ .Values.adot.namespace }}
   labels:
     app: opentelemetry
     component: otel-agent-conf
