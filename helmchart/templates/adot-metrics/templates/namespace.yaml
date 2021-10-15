@@ -1,8 +1,0 @@
-{{- if .Values.adotMetrics.enabled }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: aws-cloudwatch-metrics
-  labels:
-    name: aws-cloudwatch-metrics
-{{- end }}

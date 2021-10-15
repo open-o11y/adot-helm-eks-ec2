@@ -9,7 +9,7 @@
   <component name="TemplatesService">
     <option name="TEMPLATE_FOLDERS">
       <list>
-        <option value="$MODULE_DIR$/Simple-ADOT-Helm-Chart/templates" />
+        <option value="$MODULE_DIR$/adot-helm-eks-ec2/templates" />
       </list>
     </option>
   </component>

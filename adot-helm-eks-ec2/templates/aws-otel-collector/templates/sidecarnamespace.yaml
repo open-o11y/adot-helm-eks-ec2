@@ -1,0 +1,8 @@
+{{- if .Values.adotCollector.sidecar.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.adotCollector.sidecar.namespace }}
+  labels:
+    name: {{ .Values.adotCollector.sidecar.namespace }}
+{{- end -}}
