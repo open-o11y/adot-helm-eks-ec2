@@ -28,57 +28,57 @@ data:
   application-log.conf: |
     [INPUT]
         Name                tail
-        Tag                 {{ .Values.fluentbit.input.tag }}
-        Exclude_Path        {{ .Values.fluentbit.input.excludePath }}
-        Path                {{ .Values.fluentbit.input.logPath }}
-        Docker_Mode         {{ .Values.fluentbit.input.dockerMode }}
-        Docker_Mode_Flush   {{ .Values.fluentbit.input.dockerModeFlush }}
-        Docker_Mode_Parser  {{ .Values.fluentbit.input.docerModeParser }}
-        Parser              {{ .Values.fluentbit.input.parser }}
-        DB                  {{ .Values.fluentbit.input.db }}
-        Mem_Buf_Limit       {{ .Values.fluentbit.input.memBufLimit }}
-        Skip_Long_Lines     {{ .Values.fluentbit.input.skipLongLines }}
-        Refresh_Interval    {{ .Values.fluentbit.input.refreshInterval }}
-        Rotate_Wait         {{ .Values.fluentbit.input.rotateWait }}
-        storage.type        {{ .Values.fluentbit.input.storageType }}
+        Tag                 {{ .Values.fluentbit.input.applicationLog.tag }}
+        Exclude_Path        {{ .Values.fluentbit.input.applicationLog.excludePath }}
+        Path                {{ .Values.fluentbit.input.applicationLog.path }}
+        Docker_Mode         {{ .Values.fluentbit.input.applicationLog.dockerMode }}
+        Docker_Mode_Flush   {{ .Values.fluentbit.input.applicationLog.dockerModeFlush }}
+        Docker_Mode_Parser  {{ .Values.fluentbit.input.applicationLog.dockerModeParser }}
+        Parser              {{ .Values.fluentbit.input.applicationLog.parser }}
+        DB                  {{ .Values.fluentbit.input.applicationLog.db }}
+        Mem_Buf_Limit       {{ .Values.fluentbit.input.applicationLog.memBufLimit }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.applicationLog.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.applicationLog.refreshInterval }}
+        Rotate_Wait         {{ .Values.fluentbit.input.applicationLog.rotateWait }}
+        storage.type        {{ .Values.fluentbit.input.applicationLog.storageType }}
         Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [INPUT]
         Name                tail
-        Tag                 {{ .Values.fluentbit.input.tag }}
-        Path                {{ .Values.fluentbit.input.fluentBitPath }}
-        Parser              {{ .Values.fluentbit.input.parser }}
-        DB                  /var/fluent-bit/state/flb_log.db
-        Mem_Buf_Limit       5MB
-        Skip_Long_Lines     {{ .Values.fluentbit.input.skipLongLines }}
-        Refresh_Interval    {{ .Values.fluentbit.input.refreshInterval }}
+        Tag                 {{ .Values.fluentbit.input.applicationLog.tag }}
+        Path                {{ .Values.fluentbit.input.applicationLog.fluentbit.path }}
+        Parser              {{ .Values.fluentbit.input.applicationLog.parser }}
+        DB                  {{ .Values.fluentbit.input.applicationLog.fluentbit.db }}
+        Mem_Buf_Limit       {{ .Values.fluentbit.input.applicationLog.fluentbit.memBufLimit }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.applicationLog.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.applicationLog.refreshInterval }}
         Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [INPUT]
         Name                tail
-        Tag                 application.*
-        Path                {{ .Values.fluentbit.input.cloudwatchAgentPath }}
-        Docker_Mode         On
-        Docker_Mode_Flush   5
-        Docker_Mode_Parser  cwagent_firstline
-        Parser              docker
-        DB                  /var/fluent-bit/state/flb_cwagent.db
-        Mem_Buf_Limit       5MB
-        Skip_Long_Lines     {{ .Values.fluentbit.input.skipLongLines }}
-        Refresh_Interval    {{ .Values.fluentbit.input.refreshInterval }}
+        Tag                 {{ .Values.fluentbit.input.applicationLog.tag }}
+        Path                {{ .Values.fluentbit.input.applicationLog.cloudwatchAgent.path }}
+        Docker_Mode         {{ .Values.fluentbit.input.applicationLog.dockerMode }}
+        Docker_Mode_Flush   {{ .Values.fluentbit.input.applicationLog.dockerModeFlush }}
+        Docker_Mode_Parser  {{ .Values.fluentbit.input.applicationLog.cloudwatchAgent.dockerModeParser }}
+        Parser              {{ .Values.fluentbit.input.applicationLog.parser }}
+        DB                  {{ .Values.fluentbit.input.applicationLog.cloudwatchAgent.db }}
+        Mem_Buf_Limit       {{ .Values.fluentbit.input.applicationLog.cloudwatchAgent.memBufLimit }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.applicationLog.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.applicationLog.refreshInterval }}
         Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [FILTER]
         Name                kubernetes
-        Match               application.*
-        Kube_URL            https://kubernetes.default.svc:443
-        Kube_Tag_Prefix     application.var.log.containers.
-        Merge_Log           On
-        Merge_Log_Key       log_processed
-        K8S-Logging.Parser  On
-        K8S-Logging.Exclude Off
-        Labels              Off
-        Annotations         Off
+        Match               {{ .Values.fluentbit.kubernetesFilter.match }}
+        Kube_URL            {{ .Values.fluentbit.kubernetesFilter.kubeURL }}
+        Kube_Tag_Prefix     {{ .Values.fluentbit.kubernetesFilter.kubeTagPrefix }}
+        Merge_Log           {{ .Values.fluentbit.kubernetesFilter.mergeLog }}
+        Merge_Log_Key       {{ .Values.fluentbit.kubernetesFilter.mergeLogKey }}
+        K8S-Logging.Parser  {{ .Values.fluentbit.kubernetesFilter.k8sLoggingParser }}
+        K8S-Logging.Exclude {{ .Values.fluentbit.kubernetesFilter.k8sLoggingExclude }}
+        Labels              {{ .Values.fluentbit.kubernetesFilter.labels }}
+        Annotations         {{ .Values.fluentbit.kubernetesFilter.annotations }}
 
     [OUTPUT]
         Name                cloudwatch_logs
@@ -92,27 +92,27 @@ data:
   dataplane-log.conf: |
     [INPUT]
         Name                systemd
-        Tag                 dataplane.systemd.*
-        Systemd_Filter      _SYSTEMD_UNIT=docker.service
-        Systemd_Filter      _SYSTEMD_UNIT=kubelet.service
-        DB                  /var/fluent-bit/state/systemd.db
-        Path                /var/log/journal
+        Tag                 {{ .Values.fluentbit.input.dataplaneLog.systemd.tag }}
+        Systemd_Filter      {{ .Values.fluentbit.input.dataplaneLog.systemd.dockerUnit }}
+        Systemd_Filter      {{ .Values.fluentbit.input.dataplaneLog.systemd.kubeletUnit }}
+        DB                  {{ .Values.fluentbit.input.dataplaneLog.systemd.db }}
+        Path                {{ .Values.fluentbit.input.dataplaneLog.systemd.path }}
         Read_From_Tail      {{ .Values.fluentbit.env.readFromTail }}
 
     [INPUT]
         Name                tail
-        Tag                 dataplane.tail.*
-        Path                /var/log/containers/aws-node*, /var/log/containers/kube-proxy*
-        Docker_Mode         On
-        Docker_Mode_Flush   5
-        Docker_Mode_Parser  container_firstline
-        Parser              docker
-        DB                  /var/fluent-bit/state/flb_dataplane_tail.db
-        Mem_Buf_Limit       50MB
-        Skip_Long_Lines     On
-        Refresh_Interval    10
-        Rotate_Wait         30
-        storage.type        filesystem
+        Tag                 {{ .Values.fluentbit.input.dataplaneLog.tail.tag }}
+        Path                {{ .Values.fluentbit.input.dataplaneLog.tail.path }}
+        Docker_Mode         {{ .Values.fluentbit.input.dataplaneLog.tail.dockerMode }}
+        Docker_Mode_Flush   {{ .Values.fluentbit.input.dataplaneLog.tail.dockerModeFlush }}
+        Docker_Mode_Parser  {{ .Values.fluentbit.input.dataplaneLog.tail.dockerModeParser }}
+        Parser              {{ .Values.fluentbit.input.dataplaneLog.tail.parser }}
+        DB                  {{ .Values.fluentbit.input.dataplaneLog.tail.db }}
+        Mem_Buf_Limit       {{ .Values.fluentbit.input.dataplaneLog.tail.memBufLimit }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.dataplaneLog.tail.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.dataplaneLog.tail.refreshInterval }}
+        Rotate_Wait         {{ .Values.fluentbit.input.dataplaneLog.tail.rotateWait }}
+        storage.type        {{ .Values.fluentbit.input.dataplaneLog.tail.storageType }}
         Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [FILTER]
@@ -140,35 +140,35 @@ data:
   host-log.conf: |
     [INPUT]
         Name                tail
-        Tag                 host.dmesg
-        Path                /var/log/dmesg
-        Parser              syslog
-        DB                  /var/fluent-bit/state/flb_dmesg.db
-        Mem_Buf_Limit       5MB
-        Skip_Long_Lines     On
-        Refresh_Interval    10
+        Tag                 {{ .Values.fluentbit.input.hostLog.dmesg.tag }}
+        Path                {{ .Values.fluentbit.input.hostLog.dmesg.path }}
+        Parser              {{ .Values.fluentbit.input.hostLog.parser }}
+        DB                  {{ .Values.fluentbit.input.hostLog.dmesg.db }}
+        Mem_Buf_Limit       {{ .Values.fluentbit.input.hostLog.memBufLimit }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.hostLog.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.hostLog.refreshInterval }}
         Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [INPUT]
         Name                tail
-        Tag                 host.messages
-        Path                /var/log/messages
-        Parser              syslog
-        DB                  /var/fluent-bit/state/flb_messages.db
-        Mem_Buf_Limit       5MB
-        Skip_Long_Lines     On
-        Refresh_Interval    10
+        Tag                 {{ .Values.fluentbit.input.hostLog.messages.tag }}
+        Path                {{ .Values.fluentbit.input.hostLog.messages.path }}
+        Parser              {{ .Values.fluentbit.input.hostLog.parser }}
+        DB                  {{ .Values.fluentbit.input.hostLog.messages.db }}
+        Mem_Buf_Limit       {{ .Values.fluentbit.input.hostLog.memBufLimit }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.hostLog.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.hostLog.refreshInterval }}
         Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [INPUT]
         Name                tail
-        Tag                 host.secure
-        Path                /var/log/secure
-        Parser              syslog
-        DB                  /var/fluent-bit/state/flb_secure.db
-        Mem_Buf_Limit       5MB
-        Skip_Long_Lines     On
-        Refresh_Interval    10
+        Tag                 {{ .Values.fluentbit.input.hostLog.secure.tag }}
+        Path                {{ .Values.fluentbit.input.hostLog.secure.path }}
+        Parser              {{ .Values.fluentbit.input.hostLog.parser }}
+        DB                  {{ .Values.fluentbit.input.hostLog.secure.db }}
+        Mem_Buf_Limit       {{ .Values.fluentbit.input.hostLog.memBufLimit }}
+        Skip_Long_Lines     {{ .Values.fluentbit.input.hostLog.skipLongLines }}
+        Refresh_Interval    {{ .Values.fluentbit.input.hostLog.refreshInterval }}
         Read_from_Head      {{ .Values.fluentbit.env.readFromHead }}
 
     [FILTER]
