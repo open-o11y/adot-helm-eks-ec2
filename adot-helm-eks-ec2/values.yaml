@@ -11,13 +11,13 @@ serviceAccount:
 fluentbit:
   enabled: true
   namespaceOverride: ""
-  name: fluent-bit
-  configName: fluent-bit-config
-  namespace: amazon-cloudwatch
+  name: "fluent-bit"
+  configName: "fluent-bit-config"
+  namespace: "amazon-cloudwatch"
   image:
-    repository: amazon/aws-for-fluent-bit
-    tag: 2.20.0
-    pullPolicy: Always
+    repository: "amazon/aws-for-fluent-bit"
+    tag: "2.20.0"
+    pullPolicy: "Always"
   input:
     applicationLog:
       tag: "application.*"
@@ -91,50 +91,50 @@ fluentbit:
     annotations: "Off"
   resources:
     limits:
-      memory: 200Mi
+      memory: "200Mi"
     requests:
-      cpu: 500m
-      memory: 100Mi
+      cpu: "500m"
+      memory: "100Mi"
   volumeMounts:
-    - name: fluentbitstate
-      mountPath: /var/fluent-bit/state
-    - name: varlog
-      mountPath: /var/log
+    - name: "fluentbitstate"
+      mountPath: "/var/fluent-bit/state"
+    - name: "varlog"
+      mountPath: "/var/log"
       readOnly: true
-    - name: varlibdockercontainers
-      mountPath: /var/lib/docker/containers
+    - name: "varlibdockercontainers"
+      mountPath: "/var/lib/docker/containers"
       readOnly: true
-    - name: fluent-bit-config
-      mountPath: /fluent-bit/etc/
-    - name: runlogjournal
-      mountPath: /run/log/journal
+    - name: "fluent-bit-config"
+      mountPath: "/fluent-bit/etc/"
+    - name: "runlogjournal"
+      mountPath: "/run/log/journal"
       readOnly: true
-    - name: dmesg
-      mountPath: /var/log/dmesg
+    - name: "dmesg"
+      mountPath: "/var/log/dmesg"
       readOnly: true
   volumes:
-    - name: fluentbitstate
+    - name: "fluentbitstate"
       hostPath:
-        path: /var/fluent-bit/state
-    - name: varlog
+        path: "/var/fluent-bit/state"
+    - name: "varlog"
       hostPath:
-        path: /var/log
-    - name: varlibdockercontainers
+        path: "/var/log"
+    - name: "varlibdockercontainers"
       hostPath:
-        path: /var/lib/docker/containers
-    - name: fluent-bit-config
+        path: "/var/lib/docker/containers"
+    - name: "fluent-bit-config"
       configMap:
-        name: fluent-bit-config
-    - name: runlogjournal
+        name: "fluent-bit-config"
+    - name: "runlogjournal"
       hostPath:
-        path: /run/log/journal
-    - name: dmesg
+        path: "/run/log/journal"
+    - name: "dmesg"
       hostPath:
-        path: /var/log/dmesg
+        path: "/var/log/dmesg"
   tolerations:
-    - key: node-role.kubernetes.io/master
-      operator: Exists
-      effect: NoSchedule
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
     - operator: "Exists"
       effect: "NoExecute"
     - operator: "Exists"
@@ -144,13 +144,3 @@ fluentbit:
     httpPort: "2020"
     readFromHead: "Off"
     readFromTail: "On"
-
-adot:
-  enabled: true
-  namespaceOverride: ""
-  name: aws-otel-collector
-  image:
-    repository: amazon/aws-otel-collector
-    tag: v0.13.0
-    pullPolicy: IfNotPresent
-  namespace: aws-otel-eks
