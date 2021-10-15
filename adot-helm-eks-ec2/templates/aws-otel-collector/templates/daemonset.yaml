@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: {{ .Values.adotCollector.daemonSet.containersName }}
-          image: "{{ .Values.adotCollector.daemonSet.image.repository }}:{{ .Values.adotCollector.daemonSet.image.tag }}"
-          imagePullPolicy: {{ .Values.adotCollector.daemonSet.image.pullPolicy }}
+          image: "{{ .Values.adotCollector.image.repository }}:{{ .Values.adotCollector.image.tag }}"
+          imagePullPolicy: {{ .Values.adotCollector.daemonSet.imagePullPolicy }}
           env:
             {{- toYaml .Values.adotCollector.daemonSet.env | nindent 12}}
           command:

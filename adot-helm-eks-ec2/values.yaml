@@ -54,6 +54,10 @@ adot:
   namespace: aws-otel-eks
 
 adotCollector:
+  image:
+    name: aws-otel-collector
+    repository: amazon/aws-otel-collector
+    tag: v0.13.0
   daemonSet:
     enabled: true
     nameOverride: ""
@@ -72,10 +76,7 @@ adotCollector:
       app: opentelemetry
       component: adot-conf
     containersName: adot-collector-container
-    image:
-      repository: amazon/aws-otel-collector
-      tag: v0.13.0
-      pullPolicy: IfNotPresent
+    imagePullPolicy: IfNotPresent
     env:
       - name: K8S_NODE_NAME
         valueFrom:
@@ -183,7 +184,6 @@ adotCollector:
           - node_cpu_limit
           - node_memory_working_set
           - node_memory_limit
-
       # pod metrics
       - dimensions: [[PodName, Namespace, ClusterName], [Service, Namespace, ClusterName], [Namespace, ClusterName], [ClusterName]]
         metric_name_selectors:
@@ -200,28 +200,23 @@ adotCollector:
       - dimensions: [[PodName, Namespace, ClusterName]]
         metric_name_selectors:
           - pod_number_of_container_restarts
-
       # cluster metrics
       - dimensions: [[ClusterName]]
         metric_name_selectors:
           - cluster_node_count
           - cluster_failed_node_count
-
       # service metrics
       - dimensions: [[Service, Namespace, ClusterName], [ClusterName]]
         metric_name_selectors:
           - service_number_of_running_pods
-
       # node fs metrics
       - dimensions: [[NodeName, InstanceId, ClusterName], [ClusterName]]
         metric_name_selectors:
           - node_filesystem_utilization
-
       # namespace metrics
       - dimensions: [[Namespace, ClusterName], [ClusterName]]
         metric_name_selectors:
           - namespace_number_of_running_pods
-
     service:
       pipelines:
       metrics:
@@ -231,11 +226,11 @@ adotCollector:
       extensions: [health_check]
 
   sidecar:
-    enabled: false
+    enabled: true
     name: adot-sidecar
     namespace: adot-sidecar-namespace
     namespaceOverride: ""
-    regionS3: "us-west-2"
+    regionS3: ""
     replicas: 1
     containers:
       name: adot-emitter
@@ -243,11 +238,7 @@ adotCollector:
       pullPolicy: Always
     otelOtlpEndPointValue: "localhost:4317"
     otelResourceAttributesValue: "service.namespace=AWSObservability,service.name=CloudWatchEKSService"
-    image:
-      name: aws-otel-collector
-      repository: amazon/aws-otel-collector
-      tag: latest
-      pullPolicy: Always
+    imagePullPolicy: Always
     resources:
       limits:
         cpu: 256m

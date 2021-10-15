@@ -11,7 +11,6 @@ data:
   adot-config: |
     extensions:
       health_check: {{ .Values.adotCollector.daemonSet.healthCheck }}
-
     receivers:
       awscontainerinsightreceiver:
         # all parameters are optional
@@ -19,11 +18,9 @@ data:
         container_orchestrator: {{ .Values.adotCollector.daemonSet.receivers.containerOrchestrator }}
         add_service_as_attribute: {{ .Values.adotCollector.daemonSet.receivers.addServiceAsAttribute }}
         prefer_full_pod_name: {{ .Values.adotCollector.daemonSet.receivers.preferFullPodName }}
-
     processors:
       batch/metrics:
         timeout: {{ .Values.adotCollector.daemonSet.processors.timeout }}
-
     exporters:
       awsemf:
         namespace: {{ .Values.adotCollector.daemonSet.exporters.namespace }}
@@ -35,13 +32,11 @@ data:
         parse_json_encoded_attr_values: {{ .Values.adotCollector.daemonSet.exporters.parseJsonEncodedAttrValues }}
         metric_declarations:
           {{ .Values.adotCollector.daemonSet.metricDeclarations | nindent 10 }}
-
     service:
       pipelines:
         metrics:
           receivers: {{ .Values.adotCollector.daemonSet.service.receivers }}
           processors: {{ .Values.adotCollector.daemonSet.service.processors }}
           exporters: {{ .Values.adotCollector.daemonSet.service.exporters }}
-
       extensions: {{ .Values.adotCollector.daemonSet.service.extensions }}
 {{- end -}}

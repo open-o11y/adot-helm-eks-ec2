@@ -29,12 +29,12 @@ spec:
               value: {{ .Values.adotCollector.sidecar.otelResourceAttributesValue | quote}}
             - name: S3_REGION
               value: {{ .Values.adotCollector.sidecar.regionS3 }}
-        - name: {{ .Values.adotCollector.sidecar.image.name }}
-          image: "{{ .Values.adotCollector.sidecar.image.repository }}:{{ .Values.adotCollector.sidecar.image.tag }}"
+        - name: {{ .Values.adotCollector.image.name }}
+          image: "{{ .Values.adotCollector.image.repository }}:{{ .Values.adotCollector.image.tag }}"
           env:
             - name: AWS_REGION
               value: {{ .Values.adotCollector.sidecar.region }}
-          imagePullPolicy: {{ .Values.adotCollector.sidecar.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.adotCollector.sidecar.imagePullPolicy }}
           resources:
             {{- toYaml .Values.adotCollector.sidecar.resources | nindent 12 }}
 {{- end -}}
