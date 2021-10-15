@@ -72,3 +72,19 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
     {{- .Values.adotCollector.daemonSet.namespace -}}
   {{- end -}}
 {{- end -}}
+
+
+{{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts.
+*/}}
+{{- define "adotCollector.sidecar.namespace" -}}
+  {{- if .Values.global -}}
+    {{- if .Values.global.namespaceOverride -}}
+      {{- .Values.global.namespaceOverride -}}
+    {{- else -}}
+      {{- .Values.adotCollector.sidecar.namespace -}}
+    {{- end -}}
+  {{- else -}}
+    {{- .Values.adotCollector.sidecar.namespace -}}
+  {{- end -}}
+{{- end -}}

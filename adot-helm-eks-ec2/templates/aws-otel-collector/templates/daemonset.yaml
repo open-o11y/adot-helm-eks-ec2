@@ -20,7 +20,7 @@ spec:
           env:
             {{- toYaml .Values.adotCollector.daemonSet.env | nindent 12}}
           command:
-            {{- toYaml .Values.adotCollector.daemonSet.commnad | nindent 12}}
+            {{- toYaml .Values.adotCollector.daemonSet.command | nindent 12}}
           volumeMounts:
             {{- toYaml .Values.adotCollector.daemonSet.volumeMounts | nindent 12 }}
           resources:
