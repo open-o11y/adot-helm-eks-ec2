@@ -37,4 +37,4 @@ spec:
           imagePullPolicy: {{ .Values.adotCollector.sidecar.imagePullPolicy }}
           resources:
             {{- toYaml .Values.adotCollector.sidecar.resources | nindent 12 }}
-{{- end -}}
+{{- end }}

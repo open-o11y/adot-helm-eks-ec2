@@ -13,7 +13,6 @@ data:
       health_check: {{ .Values.adotCollector.daemonSet.healthCheck }}
     receivers:
       awscontainerinsightreceiver:
-        # all parameters are optional
         collection_interval: {{ .Values.adotCollector.daemonSet.receivers.collectionInterval }}
         container_orchestrator: {{ .Values.adotCollector.daemonSet.receivers.containerOrchestrator }}
         add_service_as_attribute: {{ .Values.adotCollector.daemonSet.receivers.addServiceAsAttribute }}
@@ -39,4 +38,4 @@ data:
           processors: {{ .Values.adotCollector.daemonSet.service.processors }}
           exporters: {{ .Values.adotCollector.daemonSet.service.exporters }}
       extensions: {{ .Values.adotCollector.daemonSet.service.extensions }}
-{{- end -}}
+{{- end }}

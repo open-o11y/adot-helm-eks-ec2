@@ -28,4 +28,4 @@ spec:
       volumes:
         {{- toYaml .Values.adotCollector.daemonSet.volumes | nindent 10 }}
       serviceAccountName: {{ .Values.adotCollector.daemonSet.serviceAccount.name  }}
-{{- end -}}
+{{- end }}

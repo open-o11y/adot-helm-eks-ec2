@@ -5,4 +5,4 @@ metadata:
   name: {{ include "adotCollector.sidecar.namespace" . }}
   labels:
     name: {{ include "adotCollector.sidecar.namespace" . }}
-{{- end -}}
+{{- end }}
