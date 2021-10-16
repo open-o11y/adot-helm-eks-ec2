@@ -140,7 +140,7 @@ fluentbit:
     - operator: "Exists"
       effect: "NoSchedule"
   env:
-    httpServer: On
+    httpServer: "On"
     httpPort: "2020"
-    readFromHead: "Off"
+    readFromHead: false
     readFromTail: "On"

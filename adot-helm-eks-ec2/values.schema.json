@@ -442,13 +442,13 @@
                     "type": "object",
                     "properties": {
                         "httpServer": {
-                            "type": "boolean"
+                            "type": "string"
                         },
                         "httpPort": {
                             "type": "string"
                         },
                         "readFromHead": {
-                            "type": "string"
+                            "type": "boolean"
                         },
                         "readFromTail": {
                             "type": "string"
