@@ -17,9 +17,9 @@ spec:
         name: {{ .Values.adotCollector.sidecar.name }}
     spec:
       containers:
-        - name: {{ .Values.adotCollector.sidecar.containers.name }}
-          image: {{ .Values.adotCollector.sidecar.containers.image | quote }}
-          imagePullPolicy: {{ .Values.adotCollector.sidecar.containers.pullPolicy }}
+        - name: {{ .Values.adotCollector.sidecar.image.name }}
+          image: "{{ .Values.adotCollector.sidecar.image.repository }}:{{ .Values.adotCollector.sidecar.image.tag }}"
+          imagePullPolicy: {{ .Values.adotCollector.sidecar.image.pullPolicy }}
           env:
             - name: OTEL_OTLP_ENDPOINT
               value: {{ .Values.adotCollector.sidecar.otelOtlpEndPointValue | quote }}
@@ -34,7 +34,7 @@ spec:
           env:
             - name: AWS_REGION
               value: {{ .Values.adotCollector.sidecar.region }}
-          imagePullPolicy: {{ .Values.adotCollector.sidecar.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.adotCollector.image.sidecarPullPolicy }}
           resources:
             {{- toYaml .Values.adotCollector.sidecar.resources | nindent 12 }}
 {{- end }}

@@ -58,6 +58,8 @@ adotCollector:
     name: "aws-otel-collector"
     repository: "amazon/aws-otel-collector"
     tag: "v0.13.0"
+    daemonSetPullPolicy: "IfNotPresent"
+    sidecarPullPolicy: "Always"
   daemonSet:
     enabled: true
     daemonSetName: "adot-collector-daemonset"
@@ -73,7 +75,6 @@ adotCollector:
       app: "opentelemetry"
       component: "adot-conf"
     containersName: "adot-collector-container"
-    imagePullPolicy: "IfNotPresent"
     env:
       - name: "K8S_NODE_NAME"
         valueFrom:
@@ -142,12 +143,12 @@ adotCollector:
       - name: "adot-config-vol"
         mountPath: "/conf"
     extensions:
-    healthCheck:
+      healthCheck: ""
     receivers:
-      collectionInterval:
-      containerOrchestrator:
-      addServiceAsAttribute:
-      preferFullPodName:
+      collectionInterval: ""
+      containerOrchestrator: ""
+      addServiceAsAttribute: ""
+      preferFullPodName: ""
     processors:
       timeout: 60s
     exporters:
@@ -215,11 +216,10 @@ adotCollector:
         metric_name_selectors:
           - namespace_number_of_running_pods
     service:
-      pipelines:
       metrics:
-      receivers: ["awscontainerinsightreceiver"]
-      processors: ["batch/metrics"]
-      exporters: ["awsemf"]
+        receivers: ["awscontainerinsightreceiver"]
+        processors: ["batch/metrics"]
+        exporters: ["awsemf"]
       extensions: ["health_check"]
 
   sidecar:
@@ -229,13 +229,13 @@ adotCollector:
     namespaceOverride: ""
     regionS3: ""
     replicas: 1
-    containers:
+    image:
       name: "adot-emitter"
-      image: "aottestbed/aws-otel-collector-java-sample-app:0.6.0"
+      repository: "aottestbed/aws-otel-collector-java-sample-app"
+      tag: "0.6.0"
       pullPolicy: "Always"
     otelOtlpEndPointValue: "localhost:4317"
     otelResourceAttributesValue: "service.namespace=AWSObservability,service.name=CloudWatchEKSService"
-    imagePullPolicy: "Always"
     resources:
       limits:
         cpu: "256m"

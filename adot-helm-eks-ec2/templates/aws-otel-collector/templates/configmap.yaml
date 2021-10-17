@@ -10,7 +10,7 @@ metadata:
 data:
   adot-config: |
     extensions:
-      health_check: {{ .Values.adotCollector.daemonSet.healthCheck }}
+      health_check: {{ .Values.adotCollector.daemonSet.extensions.healthCheck }}
     receivers:
       awscontainerinsightreceiver:
         collection_interval: {{ .Values.adotCollector.daemonSet.receivers.collectionInterval }}
@@ -34,8 +34,8 @@ data:
     service:
       pipelines:
         metrics:
-          receivers: {{ .Values.adotCollector.daemonSet.service.receivers }}
-          processors: {{ .Values.adotCollector.daemonSet.service.processors }}
-          exporters: {{ .Values.adotCollector.daemonSet.service.exporters }}
+          receivers: {{ .Values.adotCollector.daemonSet.service.metrics.receivers }}
+          processors: {{ .Values.adotCollector.daemonSet.service.metrics.processors }}
+          exporters: {{ .Values.adotCollector.daemonSet.service.metrics.exporters }}
       extensions: {{ .Values.adotCollector.daemonSet.service.extensions }}
 {{- end }}
