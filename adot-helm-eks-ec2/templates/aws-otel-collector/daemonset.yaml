@@ -1,87 +1,31 @@
-# create Daemonset
+{{- if .Values.adotCollector.daemonSet.enabled }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: aws-otel-eks-ci
-  namespace: aws-otel-eks
+  name: {{ .Values.adotCollector.daemonSet.daemonSetName }}
+  namespace: {{ .Values.adotCollector.daemonSet.namespace }}
 spec:
   selector:
     matchLabels:
-      name: aws-otel-eks-ci
+      name: {{ .Values.adotCollector.daemonSet.daemonSetName }}
   template:
     metadata:
       labels:
-        name: aws-otel-eks-ci
+        name: {{ .Values.adotCollector.daemonSet.daemonSetName }}
     spec:
       containers:
-        - name: aws-otel-collector
-          image: amazon/aws-otel-collector:v0.13.0
+        - name: {{ .Values.adotCollector.daemonSet.containersName }}
+          image: "{{ .Values.adotCollector.image.repository }}:{{ .Values.adotCollector.image.tag }}"
+          imagePullPolicy: {{ .Values.adotCollector.image.daemonSetPullPolicy }}
           env:
-            - name: K8S_NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-            - name: HOST_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
-            - name: HOST_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-            - name: K8S_NAMESPACE
-              valueFrom:
-                 fieldRef:
-                   fieldPath: metadata.namespace
-          imagePullPolicy: Always
+            {{- toYaml .Values.adotCollector.daemonSet.env | nindent 12}}
           command:
-            - "/awscollector"
-            - "--config=/conf/otel-agent-config.yaml"
+            {{- toYaml .Values.adotCollector.daemonSet.command | nindent 12}}
           volumeMounts:
-            - name: rootfs
-              mountPath: /rootfs
-              readOnly: true
-            - name: dockersock
-              mountPath: /var/run/docker.sock
-              readOnly: true
-            - name: varlibdocker
-              mountPath: /var/lib/docker
-              readOnly: true
-            - name: sys
-              mountPath: /sys
-              readOnly: true
-            - name: devdisk
-              mountPath: /dev/disk
-              readOnly: true
-            - name: otel-agent-config-vol
-              mountPath: /conf
+            {{- toYaml .Values.adotCollector.daemonSet.volumeMounts | nindent 12 }}
           resources:
-            limits:
-              cpu:  200m
-              memory: 200Mi
-            requests:
-              cpu: 200m
-              memory: 200Mi
+            {{- toYaml .Values.adotCollector.daemonSet.resources | nindent 12 }}
       volumes:
-        - configMap:
-            name: otel-agent-conf
-            items:
-              - key: otel-agent-config
-                path: otel-agent-config.yaml
-          name: otel-agent-config-vol
-        - name: rootfs
-          hostPath:
-            path: /
-        - name: dockersock
-          hostPath:
-            path: /var/run/docker.sock
-        - name: varlibdocker
-          hostPath:
-            path: /var/lib/docker
-        - name: sys
-          hostPath:
-            path: /sys
-        - name: devdisk
-          hostPath:
-            path: /dev/disk/
-      serviceAccountName: aws-otel-sa
+        {{- toYaml .Values.adotCollector.daemonSet.volumes | nindent 10 }}
+      serviceAccountName: {{ .Values.adotCollector.daemonSet.serviceAccount.name  }}
+{{- end }}

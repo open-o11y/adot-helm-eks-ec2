@@ -1,7 +1,8 @@
+{{- if .Values.adotCollector.daemonSet.enabled }}
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: aoc-agent-role
+  name: {{ .Values.adotCollector.daemonSet.clusterRoleName }}
 rules:
   - apiGroups: [""]
     resources: ["pods", "nodes", "endpoints"]
@@ -20,5 +21,6 @@ rules:
     verbs: ["create", "get"]
   - apiGroups: [""]
     resources: ["configmaps"]
-    resourceNames: ["otel-container-insight-clusterleader"]
+    resourceNames: ["adot-container-insight-clusterleader"]
     verbs: ["get","update"]
+{{- end }}
