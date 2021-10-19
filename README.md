@@ -26,26 +26,26 @@ helm search repo [repo_name]
 
 ```console
 $ helm install \
-  [RELEASE_NAME] [RELEASE_NAME]/adot-helm-eks-ec2 \
+  [RELEASE_NAME] [REPO_NAME]/adot-helm-eks-ec2 \
   --set clusterName=[Cluster_Name] --set region=[AWS_Region]
 ```
 Cluster_Name and AWS_Region must be specified with your own EKS cluster and the region.
-You can get their names by executing following command.
+You can find these values by executing following command.
 
 ```console
 $ kubectl config current-context
 
-[IAM_User_Name]@[Cluster_name].[AWS_Region].eksctl.io
+[IAM_User_Name]@[Cluster_Name].[AWS_Region].eksctl.io
 ```
 
-To verify the installation is successfully completed, you can execute the following command.
+To verify the installation is successful, you can execute the following command.
 
 ```console
 $ kubectl get pods --all-namespaces
 
-# If you see these four pods, two for fluent-bit and two for ADOT Collector as Daemonset
-# running with your existed pods, they are succesfully installed.
-  
+# If you see four running pods, two for Fluent Bit and two for ADOT Collector as DaemonSets
+# within the specified namespaces, they are successfully deployed.  
+
 NAMESPACE                NAME                             READY   STATUS    RESTARTS   AGE
 amazon-cloudwatch        fluent-bit-f27cz                 1/1     Running   0          4s
 amazon-cloudwatch        fluent-bit-m2mkr                 1/1     Running   0          4s
@@ -57,39 +57,40 @@ aws-cloudwatch-metrics   adot-collector-daemonset-x7n8x   1/1     Running   0   
 
 - Open CloudWatch console
 - Select "Logs -> Log groups" on the left navigation bar.
-- Check if following four folder is existed. (performance will take longer than others)
+- Check if following four log groups exist (performance log group will take longer than others).
 ```console
-/aws/containerinsights/[PROJECT_NAME]/application
-/aws/containerinsights/[PROJECT_NAME]/dataplane
-/aws/containerinsights/[PROJECT_NAME]/host
-/aws/containerinsights/[PROJECT_NAME]/performance
+/aws/containerinsights/[CLUSTER_NAME]/application
+/aws/containerinsights/[CLUSTER_NAME]/dataplane
+/aws/containerinsights/[CLUSTER_NAME]/host
+/aws/containerinsights/[CLUSTER_NAME]/performance
 ```
 - Select "Insights -> Container Insights" on the left navigation bar.
 - Choose Performance monitoring in the drop-down menu on the top-left side.
-- If you see graphs on the screen, both metrics and logs are successfully working.  
+- Choose the levels such as EKS pods, EKS nodes, and EKS namespaces from the drop-down menu in the automated dashboard.
+- If you observe metrics of the running pods for CPU Utilization, Memory Utilization, etc, the metrics are successfully collected and visualized in Container Insights.
 
 ## Configuration
 See Customizing the Chart Before Installing. To see all configurable options with detailed comments:
 
 ```console
-$ helm show values [RELEASE_NAME]/adot-helm-eks-ec2
+$ helm show values [REPO_NAME]/adot-helm-eks-ec2
 ```
 
 By changing values in `values.yaml`, you are able to customize the chart to use your preferred configuration.
-Following options are some useful configuration that can be applied in this Helm chart.
+Following options are some useful configurations that can be applied in this Helm chart.
 
 ### Optional: Deploy ADOT Collector as Sidecar
 
-Using the `helm install` command guided above is deploying ADOT Collector and Fluentbit as Daemonset.
-However, ADOT Collector can be deployed as Sidecar when executing the following command.
+Use `helm install` command from [Install Chart](https://github.com/open-o11y/adot-helm-eks-ec2#install-chart) to deploy ADOT Collector and Fluent Bit as DaemonSet.
+However, ADOT Collector can be deployed as Sidecar with the following command.
 
 ```console
 $ helm install \
-  [RELEASE_NAME] [RELEASE_NAME]/adot-helm-eks-ec2 \
+  [RELEASE_NAME] [REPO_NAME]/adot-helm-eks-ec2 \
   --set clusterName=[Cluster_Name] --set region=[AWS_Region] \
   --set adotCollector.daemonSet.enabled=false --set adotCollector.sidecar.enabled=true
 ```
-This command disables deploying ADOT Collector as DeamonSet, while enables deploying it as Sidecar.
+The use of `--set` flag with `enabled=true or false` can switch on/off the specified deployment mode. The command set `enabled=false` for ADOT Collector as DaemonSet and 'enabled=true' to deploy ADOT Collector as Sidecar.
 You can also check whether your applications are successfully deployed by executing the following command.
 
 ```console
@@ -120,7 +121,7 @@ $ helm uninstall [RELEASE_NAME]
 ## Upgrade Chart
 
 ```console
-$ helm upgrade [RELEASE_NAME] [RELEASE_NAME]/adot-helm-eks-ec2
+$ helm upgrade [RELEASE_NAME] [REPO_NAME]/adot-helm-eks-ec2
 ```
 
 ## Further Information
