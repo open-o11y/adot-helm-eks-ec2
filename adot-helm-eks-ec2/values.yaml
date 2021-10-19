@@ -315,7 +315,7 @@ adotCollector:
       extensions: ["health_check"]
 
   sidecar:
-    enabled: true
+    enabled: false
     name: "adot-sidecar"
     namespace: "adot-sidecar-namespace"
     namespaceOverride: ""
