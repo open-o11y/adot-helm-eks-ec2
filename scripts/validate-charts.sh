@@ -10,7 +10,7 @@ export PATH="${TOOLS_DIR}:${PATH}"
 FAILED_V3=()
 
 echo "Chart validation ${CHART_DIR} with Helm v3"
-helmv3 template ${CHART_DIR} | kubeval --strict --ignore-missing-schemas || FAILED_V3+=("${CHART_DIR}")
+helmv3 template ${CHART_DIR} | kubeval || FAILED_V3+=("${CHART_DIR}")
 
 if  [[ "${#FAILED_V3[@]}" -eq 0 ]]; then
     echo "All charts passed validation tests!"

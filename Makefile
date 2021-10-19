@@ -1,7 +1,4 @@
 REPO_ROOT ?= $(shell git rev-parse --show-toplevel)
-BUILD_DIR ?= $(dir $(realpath -s $(firstword $(MAKEFILE_LIST))))/build
-
-$(shell mkdir -p ${BUILD_DIR})
 
 .PHONY:all
 all: validate lint
