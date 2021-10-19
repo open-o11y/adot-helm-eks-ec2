@@ -44,7 +44,8 @@ To verify the installation is successfully completed, you can execute the follow
 $ kubectl get pods --all-namespaces
 
 # If you see these four pods, two for fluent-bit and two for ADOT Collector as Daemonset
-  running with your existed pods, they are succesfully installed.  
+# running with your existed pods, they are succesfully installed.
+  
 NAMESPACE                NAME                             READY   STATUS    RESTARTS   AGE
 amazon-cloudwatch        fluent-bit-f27cz                 1/1     Running   0          4s
 amazon-cloudwatch        fluent-bit-m2mkr                 1/1     Running   0          4s
@@ -103,9 +104,9 @@ amazon-cloudwatch        fluent-bit-wqhmd                1/1     Running   0    
 
 ### Optional: Deploy ADOT Collector as Deployment and StatefulSet
 
-Unfortunately, Deploying ADOT Collector as Deployment and StatefulSet requires installing ADOT Operator. 
-
-TODO: How to deploy these
+Deploying ADOT Collector as Deployment mode and StatefulSet mode requires installing ADOT Operator. 
+See [OpenTelemetry Operator Helm Chart](https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-operator) 
+for detailed explanation.
 
 ## Uninstall Chart
 
