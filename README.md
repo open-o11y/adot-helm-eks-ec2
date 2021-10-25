@@ -17,9 +17,9 @@ The configuration is ready to collect metrics and logs and send them to CloudWat
 
 Once Helm is set up properly, add this repo as follows:
 ```console
-helm repo add [repo_name] https://TO_BE_RELEASED.github.io/adot-helm-eks-ec2
+$ helm repo add [repo_name] https://TO_BE_RELEASED.github.io/adot-helm-eks-ec2
 # You can then run following command to see the chart.
-helm search repo [repo_name]
+$ helm search repo [repo_name]
 ```
 
 ## Install Chart
@@ -124,6 +124,13 @@ $ helm uninstall [RELEASE_NAME]
 $ helm upgrade [RELEASE_NAME] [REPO_NAME]/adot-helm-eks-ec2
 ```
 
+## Contributing
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+## Contributors
+[Hyunuk Lim](https://github.com/hyunuk)
+[James Park](https://github.com/JamesJHPark)
+
 ## Further Information
 
 https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html
@@ -134,3 +141,7 @@ https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insight
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
 [Apache 2.0 License](https://github.com/prometheus-community/helm-charts/blob/main/LICENSE).
+
+## Support Plan
+
+Our team plans to fully support the code we plan to release in this repo.
