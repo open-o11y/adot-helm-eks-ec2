@@ -27,7 +27,7 @@ $ helm search repo [repo_name]
 ```console
 $ helm install \
   [RELEASE_NAME] [REPO_NAME]/adot-helm-eks-ec2 \
-  --set clusterName=[Cluster_Name] --set region=[AWS_Region]
+  --set clusterName=[Cluster_Name] --set awsRegion=[AWS_Region]
 ```
 Cluster_Name and AWS_Region must be specified with your own EKS cluster and the region.
 You can find these values by executing following command.
@@ -87,7 +87,7 @@ However, ADOT Collector can be deployed as Sidecar with the following command.
 ```console
 $ helm install \
   [RELEASE_NAME] [REPO_NAME]/adot-helm-eks-ec2 \
-  --set clusterName=[Cluster_Name] --set region=[AWS_Region] \
+  --set clusterName=[Cluster_Name] --set awsRegion=[AWS_Region] \
   --set adotCollector.daemonSet.enabled=false --set adotCollector.sidecar.enabled=true
 ```
 The use of `--set` flag with `enabled=true or false` can switch on/off the specified deployment mode. The command set `enabled=false` for ADOT Collector as DaemonSet and 'enabled=true' to deploy ADOT Collector as Sidecar.
@@ -133,9 +133,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Further Information
 
-https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html
-https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-EKS-otel.html
-
+https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html <br>
+https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-EKS-otel.html <br>
 
 ## License
 
